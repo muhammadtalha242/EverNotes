@@ -7,18 +7,23 @@ import styles from './Editor-styles';
 
 
 const Editor = (props) => {
-    const [text, setText] = useState("TEXTINGG")
+    const { classes, noteUpdate, selectedNote } = props;
 
-    const { classes } = props;
+    const [text, setText] = useState(selectedNote.body || "")
+    const [title, setTitle] = useState(selectedNote.title || "")
 
     const editorChangeHandler = (textValue) => {
         setText(textValue)
-        updateDatabase();
+        updateDatabase(textValue);
 
     }
     const updateDatabase = useCallback(
-        debounce(() => {
-            console.log("UPDATEING DB   ")
+        debounce((textValue) => {
+            console.log("textValue: ",textValue)
+            noteUpdate(selectedNote.id, {
+                body: textValue,
+                title:title
+            });
 
             //Update Database 
         }, 1500)

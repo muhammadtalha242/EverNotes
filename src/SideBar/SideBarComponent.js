@@ -8,7 +8,7 @@ import SidebarItemComponent from './SideBarItem';
 const SideBarComponent = (props) => {
     const [isAddingNotes, setIsAddingNotes] = useState(false)
     const [title, setTitle] = useState(null)
-    const { classes } = props;
+    const { classes, notes, selectedNoteIndex } = props;
 
     const newNotesHandler = () => {
         setIsAddingNotes(!isAddingNotes);
@@ -21,11 +21,14 @@ const SideBarComponent = (props) => {
         setTitle(event.target.value)
     }
 
-    const newNotesSubmitHandler = ()=>{
-        console.log("Title, isAdded", title, isAddingNotes )
+    const newNotesSubmitHandler = () => {
+        console.log("Title, isAdded", title, isAddingNotes)
         setIsAddingNotes(false)
     }
 
+   
+
+    
     return (
         <div className={classes.sidebarContainer}>
             <Button className={classes.newNoteBtn}
@@ -34,14 +37,33 @@ const SideBarComponent = (props) => {
             </Button>
             {isAddingNotes ?
                 <div>
-                <input type="text"
-                    placeholder="Enter new title"
-                    className={classes.newNoteInput}
-                    onKeyUp={titleHandler}
-                />
-                <Button className={classes.newNoteSubmitBtn} onClick={newNotesSubmitHandler}>Submit</Button>
+                    <input type="text"
+                        placeholder="Enter new title"
+                        className={classes.newNoteInput}
+                        onKeyUp={titleHandler}
+                    />
+                    <Button className={classes.newNoteSubmitBtn} onClick={newNotesSubmitHandler}>Submit</Button>
                 </div>
                 : null}
+            <List>
+                {notes.map((_note, _index) => {
+                    return (
+                        <div key={_index}>
+                            <SidebarItemComponent
+                                key={_index}
+                                note={_note}
+                                index={_index}
+                                selectedNoteIndex={selectedNoteIndex}
+                                selectNoteHandler={props.selectNoteHandler}
+                                deleteNoteHandler={props.deleteNoteHandler}
+
+                            />
+                            <Divider/>
+                        </div>
+                    )
+                })
+                }
+            </List>
         </div>
     )
 }
