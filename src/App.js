@@ -1,25 +1,35 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react'
+import firebase from 'firebase'
+import SidebarComponent from './SideBar/SideBarComponent';
+import EditorComponent from './Editor/Editor';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [notes, setNotes] = useState(null)
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('notes')
+      .onSnapshot(serverUpdate => {
+        const notes = serverUpdate.docs.map(_docs => {
+          const data = _docs.data();
+          data['id'] = _docs.id
+          return data
+        });
+        console.log(notes)
+        setNotes(notes)
+      })
+  }, [])
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <SidebarComponent></SidebarComponent>
+      <EditorComponent></EditorComponent>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
