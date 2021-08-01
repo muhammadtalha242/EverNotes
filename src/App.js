@@ -8,7 +8,6 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [selectedNoteIndex, setselectedNoteIndex] = useState(null)
   const [selectedNote, setSelectedNote] = useState(null)
-  const [text, setText] = useState("")
 
   useEffect(() => {
     firebase
@@ -30,23 +29,63 @@ const App = () => {
     setselectedNoteIndex(index)
     setSelectedNote(note);
   }
-  const deleteNoteHandler = (note) => {
+  const deleteNoteHandler = async (note) => {
     if (window.confirm(`Are you sure you want to delete?`)) {
       console.log("deleteNoteHandler", note)
+      const noteIndex = notes.indexOf(note);
+      setNotes(notes.filter(_note => _note !== note));
+      if (selectedNoteIndex === noteIndex) {
+        setselectedNoteIndex(null)
+        setSelectedNote(null)
+      } else {
+        notes.length >= 1 ?
+          selectNoteHandler(notes[selectedNoteIndex - 1], selectedNoteIndex - 1) :
+          setselectedNoteIndex(null)
+        setSelectedNote(null)
+      }
+
+      firebase
+        .firestore()
+        .collection('notes')
+        .doc(note.id)
+        .delete();
     }
 
   }
 
-  const noteUpdateHandler=(id, note)=>{
+  const noteUpdateHandler = (id, note) => {
     firebase
-    .firestore()
-    .collection('notes')
-    .doc(id)
-    .update({
-      title: note.title,
-      body:note.body,
-      timestamp:firebase.firestore.FieldValue.serverTimestamp()
-    })
+      .firestore()
+      .collection('notes')
+      .doc(id)
+      .update({
+        title: note.title,
+        body: note.body,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+  }
+
+  const newNote = async (title) => {
+    console.log(title)
+    const note = {
+      title: title,
+      body: ""
+    }
+    const newFromDB = await firebase
+      .firestore()
+      .collection('notes')
+      .add({
+        title: note.title,
+        body: note.body,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    const newID = newFromDB.id;
+    note['id'] = newID
+    setNotes([...notes, note]);
+    const newNoteIndex = notes.indexOf(notes.filter(n => n.id === newID)[0]);
+    setselectedNoteIndex(newNoteIndex)
+    setSelectedNote(note)
+
   }
 
   return (
@@ -56,6 +95,7 @@ const App = () => {
         selectedNoteIndex={selectedNoteIndex}
         selectNoteHandler={selectNoteHandler}
         deleteNoteHandler={deleteNoteHandler}
+        newNote={newNote}
       />
       {
         selectedNote ?

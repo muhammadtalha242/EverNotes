@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import debounce from '../util/helper';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
@@ -12,6 +12,10 @@ const Editor = (props) => {
     const [text, setText] = useState(selectedNote.body || "")
     const [title, setTitle] = useState(selectedNote.title || "")
 
+    useEffect(()=>{
+        setText(selectedNote.body)
+        setTitle(selectedNote.title)
+    },[selectedNote])
     const editorChangeHandler = (textValue) => {
         setText(textValue)
         updateDatabase(textValue);

@@ -23,7 +23,9 @@ const SideBarComponent = (props) => {
 
     const newNotesSubmitHandler = () => {
         console.log("Title, isAdded", title, isAddingNotes)
+        props.newNote(title)
         setIsAddingNotes(false)
+        setTitle(null)
     }
 
    
