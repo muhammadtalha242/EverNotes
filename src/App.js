@@ -5,7 +5,7 @@ import EditorComponent from './Editor/Editor';
 import './App.css';
 
 const App = () => {
-  const [notes, setNotes] = useState(null)
+  const [notes, setNotes] = useState([])
 
   useEffect(() => {
     firebase
@@ -25,7 +25,7 @@ const App = () => {
 
 
   return (
-    <div>
+    <div className="app-container">
       <SidebarComponent></SidebarComponent>
       <EditorComponent></EditorComponent>
     </div>
