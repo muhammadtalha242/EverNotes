@@ -3,12 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import firebase from 'firebase';
-import 'firebase/firestore';
-// const firebase = require('firebase');
-// require('firebase/firestore');
-
-var firebaseConfig = {
+import firebase from "firebase/app";
+const firebaseConfig = {
   apiKey: "AIzaSyCMn3b963cGabu4syt8cHHqDyHdbqdPQ78",
   authDomain: "ever-notes-f2c69.firebaseapp.com",
   projectId: "ever-notes-f2c69",
@@ -17,11 +13,9 @@ var firebaseConfig = {
   appId: "1:360369617291:web:8e79129e55de6145dc578e",
   measurementId: "G-X5LV6D04KC"
 };
+
 // Initialize Firebase
-
 firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-
 ReactDOM.render(
   <React.StrictMode>
     <App />
